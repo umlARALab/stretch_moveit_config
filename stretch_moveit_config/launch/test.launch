@@ -1,0 +1,6 @@
+<launch>
+    <include file="$(find stretch_moveit_config)/launch/move_group.launch"/>
+    <include file="$(find stretch_moveit_config)/launch/moveit_rviz.launch">
+        <arg name="rviz_config" value="$(find stretch_moveit_config)/launch/moveit.rviz"/>
+    </include>
+</launch>
