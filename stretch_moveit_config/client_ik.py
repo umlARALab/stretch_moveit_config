@@ -6,22 +6,25 @@ from moveit_msgs.srv import GetPositionIK
 from moveit_msgs.msg import RobotState
 from geometry_msgs.msg import PoseStamped
 
-joint_states_sub = False
 robot_state=RobotState()
 
 def joint_state_callback(msg):
-    joint_positions = [msg.position[i] for i, joint_name in enumerate(msg.name) if joint_name.startswith("joint")]
+    joint_states_sub = False
 
-    robot_state.joint_state.name = msg.name
-    robot_state.joint_state.position = joint_positions
+    if not joint_states_sub:
+        joint_positions = [msg.position[i] for i, joint_name in enumerate(msg.name) if joint_name.startswith("joint")]
 
-    rospy.loginfo("Updated Robot State: %s", robot_state)
+        robot_state.joint_state.name = msg.name
+        robot_state.joint_state.position = joint_positions
 
+        rospy.loginfo("Updated Robot State: %s", robot_state)
+    
     joint_states_sub = True
 
 def compute_ik_client():
     rospy.init_node('ik_client_node')
     pose_goal = PoseStamped()
+    
     #Pose details
     pose_goal.header.frame_id = "base_link"
     pose_goal.pose.position.x = -0.01
@@ -65,4 +68,3 @@ def compute_ik_client():
 
 if __name__ == "__main__":
     compute_ik_client()
-
